@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.codingclub.cineapp",
-      "versionCode":1
+      "versionCode":5
     }
   }
 }

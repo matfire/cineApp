@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
 		bottom: 0
 	},
 	poster: {
-		width: Dimensions.get("window").width / 3,
-		height: Dimensions.get("window").height / 3,
+		width: 200,
+		height: 300,
 		marginLeft: 5,
 		marginTop: 20
 	},
@@ -56,7 +56,8 @@ const MovieDetail = ({ route, navigation }) => {
 	}
 	return (
 		<View>
-			<ScrollView style={[styles.scrollview]}>
+			<View style={{position:"absolute", bottom:0, width:"100%", height:"100%", backgroundColor:"rgba(20,20,20,0.7)"}}></View>
+			<ScrollView style={[styles.scrollview]} endFillColor="rgba(20,20,20,0.7)">
 				<View style={{ justifyContent: "space-around", flexDirection: "row" }}>
 					<Image source={{ uri: getImageUrl(movie.poster_path, "w500") }} style={[styles.poster]} />
 					<View style={{ flexWrap: "nowrap", flexDirection: "column", flex: 1, marginLeft: 5 }}>
@@ -64,40 +65,19 @@ const MovieDetail = ({ route, navigation }) => {
 						<Text style={[styles.text]}>{movie.tagline}</Text>
 					</View>
 				</View>
-				<View style={{ justifyContent: "space-between", flexDirection: "row", alignContent: "center", marginTop: 20 }}>
+				<View style={{ justifyContent: "space-between", flexDirection: "row", alignContent: "center", marginTop: 20, marginLeft:10, marginRight:10 }}>
 					<Text style={[{ fontSize: 20 }, styles.text]}>{movie.genres.map((g) => `${g.name}, `)}</Text>
 					<Text style={[styles.text, { fontSize: 20 }]}>{`${movie.vote_average}/10`}</Text>
 				</View>
-				<Text style={[styles.text, { fontSize: 20, marginTop: 50 }]}>Overview</Text>
-				<Text style={[styles.text, { marginTop: 5 }]}>{movie.overview}</Text>
-				<Text style={[styles.text, { fontSize: 20, marginTop: 50 }]}>Cast</Text>
-				<ScrollView horizontal>
-					{movie.credits.cast.filter((c) => c.profile_path).map((c) => <CastCircle key={c.id} name={c.name} role={c.character} image={getImageUrl(c.profile_path, "w185")} />)}
+				<Text style={[styles.text, { fontSize: 20, marginTop: 50, marginLeft:10, marginRight:10 }]}>Overview</Text>
+				<Text style={[styles.text, { marginTop: 5, marginLeft:10, marginRight:10 }]}>{movie.overview}</Text>
+				<Text style={[styles.text, { fontSize: 20, marginTop: 50, marginLeft:10, marginRight:10 }]}>Cast</Text>
+				<ScrollView horizontal contentContainerStyle={{marginLeft:10, marginRight:10}}>
+					{movie.credits.cast.filter((c) => c.profile_path).map((c) => <CastCircle navigation={navigation} id={c.id} key={c.id} name={c.name} role={c.character} image={getImageUrl(c.profile_path, "w185")} />)}
 				</ScrollView>
 			</ScrollView>
 			<ImageBackground source={{ uri: getImageUrl(movie.backdrop_path, "w1280") }} style={[styles.fixed, styles.containter, { zIndex: -1 }]}>
 			</ImageBackground>
-			{/* <ScrollView contentContainerStyle={{flex:1, ...StyleSheet.absoluteFillObject, backgroundColor:'rgba(69,85,117,0.7)'}}>
-					<View style={{justifyContent:"space-around", flexDirection:"row"}}>
-						<Image source={{uri:getImageUrl(movie.poster_path, "w500")}} style={[styles.poster]} />
-						<View style={{flexWrap:"nowrap", flexDirection:"column", flex:1, marginLeft:5}}>
-	<Text style={[styles.movieTitle, styles.text]}>{movie.title} ({movie.release_date.split("-")[0]})</Text>
-	<Text style={[styles.text]}>{movie.tagline}</Text>
-						</View>
-					</View>
-					<View style={{justifyContent:"space-between", flexDirection:"row", alignContent:"center", marginTop:20}}>
-						<Text style={[{fontSize:20}, styles.text]}>{movie.genres.map((g) => `${g.name}, `)}</Text>
-						<Text style={[styles.text, {fontSize:20}]}>{`${movie.vote_average}/10`}</Text>
-					</View>
-					<Text style={[styles.text, {fontSize:20, marginTop:50}]}>Overview</Text>
-					<Text style={[styles.text, {marginTop:5}]}>{movie.overview}</Text>
-					<Text style={[styles.text, {fontSize:20, marginTop:50}]}>Cast</Text>
-					<ScrollView horizontal>
-						{movie.credits.cast.filter((c) => c.profile_path).map((c) => <CastCircle key={c.id} name={c.name} role={c.character} image={getImageUrl(c.profile_path, "w185")} />)}
-					</ScrollView>
-				</ScrollView>
-				<ImageBackground source={{uri:getImageUrl(movie.backdrop_path, "w1280")}} style={{height:"100%", width:"100%"}}>
-			</ImageBackground> */}
 		</View>
 	)
 }

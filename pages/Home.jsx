@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ScrollView, Text, Dimensions, TouchableOpacity, Image } from 'react-native'
-import { getImageUrl, getTrending } from '../client'
+import { getImageUrl, getTrending, getPlaying } from '../client'
+import MovieCard from '../components/movieCard'
 
 
 const Home = ({navigation}) => {
@@ -8,19 +9,23 @@ const Home = ({navigation}) => {
 	const [playing, setPlaying] = useState([])
 
 	useEffect(() => {
+		getPlaying().then(data => setPlaying(data))
 		getTrending().then(data => setTrending(data))
 	}, [])
 	return (
 		<ScrollView>
 			<Text style={{alignSelf:"center", fontSize:30}}>Trending</Text>
+			<ScrollView horizontal contentContainerStyle={{justifyContent:"center"}}>
 			{trending.map((t) => (
-				<TouchableOpacity key={t.id} style={{paddingBottom:50, paddingTop:50}} onPress={() => {
-					navigation.navigate("Movie Detail", {id:t.id, name:t.title})
-				}}>
-					<Image source={{uri:getImageUrl(t.poster_path, "w500")}} style={{height:Dimensions.get("screen").height / 3}} />
-			<Text style={{alignSelf:"center", fontSize:20, paddingTop:15}}>{t.title}</Text>
-				</TouchableOpacity>
+				<MovieCard key={t.id} title={t.title} poster_path={t.poster_path} id={t.id} navigation={navigation} />
 			))}
+			</ScrollView>
+			<Text style={{alignSelf:"center", fontSize:30, paddingTop:50}}>Playing</Text>
+			<ScrollView style={{flex:1}} horizontal contentContainerStyle={{justifyContent:"center"}}>
+			{playing.map((t) => (
+				<MovieCard key={t.id} title={t.title} poster_path={t.poster_path} id={t.id} navigation={navigation} />
+			))}
+			</ScrollView>
 		</ScrollView>
 	)
 }
