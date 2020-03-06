@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, ProgressBarAndroid, Image, StyleSheet, ImageBackground, Dimensions, ScrollView, Text } from 'react-native'
+import { View, ProgressBarAndroid, Image, StyleSheet, ImageBackground, Dimensions, ScrollView, Text, FlatList } from 'react-native'
 import { getPersonDetails, getImageUrl } from '../client'
 import MovieCard from '../components/movieCard'
+import ReadMore from 'react-native-read-more-text';
 
 
 const styles = StyleSheet.create({
@@ -63,11 +64,23 @@ const PersonProfile = ({ navigation, route }) => {
                     <Text style={[styles.text, { marginTop: 40 }]}>Born in {profile.place_of_birth}</Text>
                 </View>
                 <Text style={[styles.text ,{ marginTop: 50, marginLeft: 10, marginRight: 10, marginBottom:10,fontSize:20 }]}>Biography</Text>
-                <Text style={[styles.text, { marginLeft: 10, marginRight: 10 }]}>{profile.biography}</Text>
+                <ReadMore
+                    numberOfLines={3}
+                    renderRevealedFooter={(handlePress) => (<Text style={{marginLeft:10, marginRight:10, marginTop:5, color:"white"}} onPress={handlePress} >Read Less</Text>)}
+                    renderTruncatedFooter={(handlePress) => (<Text style={{marginLeft:10, marginRight:10, marginTop:5, color:"white"}} onPress={handlePress} >Read More</Text>)}
+                >
+                    <Text style={[styles.text, { marginLeft: 10, marginRight: 10 }]}>{profile.biography}</Text>
+                </ReadMore>
                 <Text style={[styles.text, {fontSize:20 ,marginTop:50, marginLeft:10, marginRight:10}]}>Credits</Text>
-                <ScrollView horizontal>
-                    {profile.movie_credits.cast && profile.movie_credits.cast.map((c) => <MovieCard id={c.id} title={c.title} poster_path={c.poster_path} navigation={navigation} key={c.id} />)}
-                </ScrollView>
+                <View>
+                {profile.movie_credits && profile.movie_credits.cast && <FlatList horizontal
+                data={profile.movie_credits.cast}
+                keyExtractor={item => item.id.toString()}
+                extraData={profile}
+                initialNumToRender={3}
+                 renderItem={({item}) => <MovieCard id={item.id} title={item.title} poster_path={item.poster_path} navigation={navigation} />}>
+                </FlatList>}
+                </View>
             </ScrollView>
             <ImageBackground source={{ uri: getImageUrl(profile.profile_path, "original") }} style={[styles.fixed, styles.containter, { zIndex: -1 }]} />
         </View>
