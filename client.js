@@ -32,4 +32,32 @@ const searchMovies = async(query) => {
 	return res.status > 200 ? [] : res.data.results
 }
 
-export {getTrending, getPlaying, getImageUrl, getMovieDetails, searchMovies, getPersonDetails}
+const getToken = async() => {
+	try {
+		let res = await axios.get(`${URL}/authentication/token/new?api_key=${API}`)
+		return res.data.request_token
+		
+	} catch (error) {
+		alert("token wnet wrong")
+	}
+}
+
+const getSession = async(token) => {
+	try {
+		let res = await axios.post(`${URL}/authentication/session/new?api_key=${API}`, {request_token:token})
+		return res.data.session_id
+	} catch (error) {
+	}
+}
+
+const getMe = async(session) => {
+	try {
+		let res = await axios.get(`${URL}/account?api_key=${API}&session_id=${session}`)
+		console.log(res.data)
+		return res.data
+		
+	} catch (error) {
+	}
+}
+
+export {getTrending, getPlaying, getImageUrl, getMovieDetails, searchMovies, getPersonDetails, getToken, getSession, getMe}
